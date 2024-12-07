@@ -1,0 +1,80 @@
+local player = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Credit to Gotaga116 For making Distorted mode",true)
+game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
+local function getGitSoundId(GithubSoundPath, AssetName)
+    local Url = GithubSoundPath
+    if not isfile(AssetName..".mp3") then 
+        writefile(AssetName..".mp3", game:HttpGet(Url)) 
+    end
+    local Sound = Instance.new("Sound")
+    Sound.SoundId = getcustomasset(AssetName..".mp3")
+    return Sound 
+end
+
+local CustomMusic = getGitSoundId("https://github.com/nervehammer1/throwawaystuff/raw/refs/heads/main/NightmareAmbient.mp3", "NightmareModeAmbient")
+CustomMusic.Parent = game:GetService("SoundService")
+CustomMusic.Looped = true
+CustomMusic:Play()
+
+task.spawn(function()
+    task.wait()
+    local lighting = game:GetService("Lighting")
+    if lighting:FindFirstChild("Atmosphere") then
+        lighting.Atmosphere:Destroy()
+    end
+    lighting.FogColor = Color3.fromRGB(27, 30, 48)
+    lighting.FogEnd = 60
+    lighting.FogStart = 0
+end)
+
+local function ConvertRoom(Room, doWait)
+    if doWait then
+        task.wait(3)
+    end
+    if Room:IsA("Model") and tonumber(Room.Name) then
+        for _, v in pairs(Room:GetDescendants()) do
+            if v:IsA("Part") or v:IsA("BasePart") or v:IsA("MeshPart") or v:IsA("UnionOperation") then
+                if v.Material == Enum.Material.Wood or v.Material == Enum.Material.WoodPlanks then
+                    v.Color = Color3.fromRGB(63, 63, 63)
+                    v.Material = Enum.Material.Limestone
+                    v.MaterialVariant = ""
+                end
+            end
+        end
+    end
+end
+
+workspace.CurrentRooms.ChildAdded:Connect(function(r)
+    ConvertRoom(r, true)
+end)
+ConvertRoom(workspace.CurrentRooms['0'])
+
+local player = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+require(player.PlayerGui.MainUI.Initiator.Main_Game).caption("Credit to Gotaga116",true)
+game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
+
+local function createEntity(url, minWait, maxWait)
+    return coroutine.wrap(function()
+        while true do
+            wait(math.random(minWait, maxWait))
+            local roomValue = game.ReplicatedStorage.GameData.LatestRoom.Value
+            if not ((roomValue >= 48 and roomValue <= 55) or (roomValue >= 98 and roomValue <= 101)) then
+                if not game.Workspace:FindFirstChild("SeekMovingNewClone") then
+                    loadstring(game:HttpGet(url))()
+                end
+            end
+        end
+    end)
+end
+
+local entities = {
+    "https://pastefy.app/OaMiKNzY/raw", 
+    "https://pastefy.app/46DCLtgg/raw", 
+    "https://pastefy.app/Y34U3ATz/raw", 
+    "Link4", 
+    "Link5"
+}
+
+for _, 
